@@ -15,7 +15,7 @@ use crate::util::ceil_div_usize;
 #[derive(Clone, Debug)]
 pub struct NonNativeTarget<FF: Field> {
     pub(crate) value: BigUintTarget,
-    _phantom: PhantomData<FF>,
+    pub(crate) _phantom: PhantomData<FF>,
 }
 
 impl<F: RichField + Extendable<D>, const D: usize> CircuitBuilder<F, D> {
