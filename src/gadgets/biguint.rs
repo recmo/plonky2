@@ -1,6 +1,6 @@
 use std::marker::PhantomData;
 
-use num::{BigUint, Integer, FromPrimitive, Zero};
+use num::{BigUint, FromPrimitive, Integer, Zero};
 
 use crate::field::extension_field::Extendable;
 use crate::field::field_types::RichField;
@@ -36,7 +36,10 @@ impl<F: RichField + Extendable<D>, const D: usize> CircuitBuilder<F, D> {
             let rem_u64 = rem.to_u64_digits()[0];
             limb_values.push(F::from_canonical_u64(rem_u64));
         }
-        let limbs = limb_values.iter().map(|&l| self.constant_binary(l)).collect();
+        let limbs = limb_values
+            .iter()
+            .map(|&l| self.constant_binary(l))
+            .collect();
 
         BigUintTarget { limbs }
     }

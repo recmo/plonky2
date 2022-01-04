@@ -4,7 +4,7 @@ use crate::field::extension_field::Extendable;
 use crate::field::field_types::RichField;
 use crate::gates::arithmetic_u32::U32ArithmeticGate;
 use crate::gates::subtraction_u32::U32SubtractionGate;
-use crate::iop::generator::{SimpleGenerator, GeneratedValues};
+use crate::iop::generator::{GeneratedValues, SimpleGenerator};
 use crate::iop::target::Target;
 use crate::iop::witness::{PartitionWitness, Witness};
 use crate::plonk::circuit_builder::CircuitBuilder;
@@ -206,7 +206,6 @@ impl<F: RichField + Extendable<D>, const D: usize> SimpleGenerator<F>
 #[cfg(test)]
 mod tests {
     use anyhow::Result;
-    
     use rand::{thread_rng, Rng};
 
     use crate::field::goldilocks_field::GoldilocksField;

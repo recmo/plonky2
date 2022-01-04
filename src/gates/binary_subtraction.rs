@@ -20,7 +20,9 @@ pub struct BinarySubtractionGate<F: RichField + Extendable<D>, const D: usize, c
     _phantom: PhantomData<F>,
 }
 
-impl<F: RichField + Extendable<D>, const D: usize, const BITS: usize> BinarySubtractionGate<F, D, BITS> {
+impl<F: RichField + Extendable<D>, const D: usize, const BITS: usize>
+    BinarySubtractionGate<F, D, BITS>
+{
     pub fn new_from_config(config: &CircuitConfig) -> Self {
         Self {
             num_ops: Self::num_ops(config),
@@ -71,7 +73,9 @@ impl<F: RichField + Extendable<D>, const D: usize, const BITS: usize> BinarySubt
     }
 }
 
-impl<F: RichField + Extendable<D>, const D: usize, const BITS: usize> Gate<F, D> for BinarySubtractionGate<F, D, BITS> {
+impl<F: RichField + Extendable<D>, const D: usize, const BITS: usize> Gate<F, D>
+    for BinarySubtractionGate<F, D, BITS>
+{
     fn id(&self) -> String {
         format!("{:?}", self)
     }
@@ -317,9 +321,9 @@ mod tests {
     use crate::field::extension_field::quartic::QuarticExtension;
     use crate::field::field_types::{Field, PrimeField};
     use crate::field::goldilocks_field::GoldilocksField;
+    use crate::gates::binary_subtraction::BinarySubtractionGate;
     use crate::gates::gate::Gate;
     use crate::gates::gate_testing::{test_eval_fns, test_low_degree};
-    use crate::gates::binary_subtraction::BinarySubtractionGate;
     use crate::hash::hash_types::HashOut;
     use crate::plonk::vars::EvaluationVars;
 

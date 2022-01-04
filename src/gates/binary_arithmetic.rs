@@ -21,7 +21,9 @@ pub struct BinaryArithmeticGate<F: RichField + Extendable<D>, const D: usize, co
     _phantom: PhantomData<F>,
 }
 
-impl<F: RichField + Extendable<D>, const D: usize, const BITS: usize> BinaryArithmeticGate<F, D, BITS> {
+impl<F: RichField + Extendable<D>, const D: usize, const BITS: usize>
+    BinaryArithmeticGate<F, D, BITS>
+{
     pub fn new_from_config(config: &CircuitConfig) -> Self {
         Self {
             num_ops: Self::num_ops(config),
@@ -71,7 +73,9 @@ impl<F: RichField + Extendable<D>, const D: usize, const BITS: usize> BinaryArit
     }
 }
 
-impl<F: RichField + Extendable<D>, const D: usize, const BITS: usize> Gate<F, D> for BinaryArithmeticGate<F, D, BITS> {
+impl<F: RichField + Extendable<D>, const D: usize, const BITS: usize> Gate<F, D>
+    for BinaryArithmeticGate<F, D, BITS>
+{
     fn id(&self) -> String {
         format!("{:?}", self)
     }

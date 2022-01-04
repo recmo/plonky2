@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use num::{BigUint, FromPrimitive, Zero, Integer};
+use num::{BigUint, FromPrimitive, Integer, Zero};
 
 use crate::field::extension_field::target::ExtensionTarget;
 use crate::field::extension_field::{Extendable, FieldExtension};

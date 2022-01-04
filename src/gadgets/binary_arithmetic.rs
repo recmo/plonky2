@@ -13,7 +13,10 @@ impl<F: RichField + Extendable<D>, const D: usize> CircuitBuilder<F, D> {
         BinaryTarget(self.add_virtual_target())
     }
 
-    pub fn add_virtual_binary_targets<const BITS: usize>(&mut self, n: usize) -> Vec<BinaryTarget<BITS>> {
+    pub fn add_virtual_binary_targets<const BITS: usize>(
+        &mut self,
+        n: usize,
+    ) -> Vec<BinaryTarget<BITS>> {
         self.add_virtual_targets(n)
             .into_iter()
             .map(BinaryTarget)
@@ -28,7 +31,11 @@ impl<F: RichField + Extendable<D>, const D: usize> CircuitBuilder<F, D> {
         BinaryTarget(self.one())
     }
 
-    pub fn connect_binary<const BITS: usize>(&mut self, x: BinaryTarget<BITS>, y: BinaryTarget<BITS>) {
+    pub fn connect_binary<const BITS: usize>(
+        &mut self,
+        x: BinaryTarget<BITS>,
+        y: BinaryTarget<BITS>,
+    ) {
         self.connect(x.0, y.0)
     }
 
@@ -62,7 +69,7 @@ impl<F: RichField + Extendable<D>, const D: usize> CircuitBuilder<F, D> {
             let (low, high) = (sum % base, (sum >> BITS) % base);
             let low_f = F::from_canonical_u64(low);
             let high_f = F::from_canonical_u64(high);
-            
+
             return Some((
                 BinaryTarget::<BITS>(self.constant(low_f)),
                 BinaryTarget::<BITS>(self.constant(high_f)),
@@ -108,12 +115,19 @@ impl<F: RichField + Extendable<D>, const D: usize> CircuitBuilder<F, D> {
         (output_low, output_high)
     }
 
-    pub fn add_binary<const BITS: usize>(&mut self, a: BinaryTarget<BITS>, b: BinaryTarget<BITS>) -> (BinaryTarget<BITS>, BinaryTarget<BITS>) {
+    pub fn add_binary<const BITS: usize>(
+        &mut self,
+        a: BinaryTarget<BITS>,
+        b: BinaryTarget<BITS>,
+    ) -> (BinaryTarget<BITS>, BinaryTarget<BITS>) {
         let one = self.one_binary();
         self.mul_add_binary(a, one, b)
     }
 
-    pub fn add_many_binary<const BITS: usize>(&mut self, to_add: &[BinaryTarget<BITS>]) -> (BinaryTarget<BITS>, BinaryTarget<BITS>) {
+    pub fn add_many_binary<const BITS: usize>(
+        &mut self,
+        to_add: &[BinaryTarget<BITS>],
+    ) -> (BinaryTarget<BITS>, BinaryTarget<BITS>) {
         match to_add.len() {
             0 => (self.zero_binary(), self.zero_binary()),
             1 => (to_add[0], self.zero_binary()),
@@ -131,7 +145,11 @@ impl<F: RichField + Extendable<D>, const D: usize> CircuitBuilder<F, D> {
         }
     }
 
-    pub fn mul_binary<const BITS: usize>(&mut self, a: BinaryTarget<BITS>, b: BinaryTarget<BITS>) -> (BinaryTarget<BITS>, BinaryTarget<BITS>) {
+    pub fn mul_binary<const BITS: usize>(
+        &mut self,
+        a: BinaryTarget<BITS>,
+        b: BinaryTarget<BITS>,
+    ) -> (BinaryTarget<BITS>, BinaryTarget<BITS>) {
         let zero = self.zero_binary();
         self.mul_add_binary(a, b, zero)
     }
@@ -153,8 +171,10 @@ impl<F: RichField + Extendable<D>, const D: usize> CircuitBuilder<F, D> {
             borrow.0,
         );
 
-        let output_result = BinaryTarget(Target::wire(gate_index, gate.wire_ith_output_result(copy)));
-        let output_borrow = BinaryTarget(Target::wire(gate_index, gate.wire_ith_output_borrow(copy)));
+        let output_result =
+            BinaryTarget(Target::wire(gate_index, gate.wire_ith_output_result(copy)));
+        let output_borrow =
+            BinaryTarget(Target::wire(gate_index, gate.wire_ith_output_borrow(copy)));
 
         (output_result, output_borrow)
     }
@@ -163,11 +183,10 @@ impl<F: RichField + Extendable<D>, const D: usize> CircuitBuilder<F, D> {
 #[cfg(test)]
 mod tests {
     use anyhow::Result;
-    
     use rand::{thread_rng, Rng};
 
-    use crate::field::goldilocks_field::GoldilocksField;
     use crate::field::field_types::Field;
+    use crate::field::goldilocks_field::GoldilocksField;
     use crate::iop::witness::PartialWitness;
     use crate::plonk::circuit_builder::CircuitBuilder;
     use crate::plonk::circuit_data::CircuitConfig;
