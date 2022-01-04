@@ -1,12 +1,8 @@
-use std::marker::PhantomData;
-
 use crate::field::extension_field::Extendable;
 use crate::field::field_types::RichField;
 use crate::gates::binary_arithmetic::BinaryArithmeticGate;
 use crate::gates::binary_subtraction::BinarySubtractionGate;
-use crate::iop::generator::{SimpleGenerator, GeneratedValues};
 use crate::iop::target::Target;
-use crate::iop::witness::{PartitionWitness, Witness};
 use crate::plonk::circuit_builder::CircuitBuilder;
 
 #[derive(Clone, Copy, Debug)]
@@ -64,12 +60,12 @@ impl<F: RichField + Extendable<D>, const D: usize> CircuitBuilder<F, D> {
             let sum = (a + b).to_canonical_u64();
             let base = 1u64 << BITS;
             let (low, high) = (sum % base, (sum >> BITS) % base);
-            let low_F = F::from_canonical_u64(low);
-            let high_F = F::from_canonical_u64(high);
+            let low_f = F::from_canonical_u64(low);
+            let high_f = F::from_canonical_u64(high);
             
             return Some((
-                BinaryTarget::<BITS>(self.constant(low_F)),
-                BinaryTarget::<BITS>(self.constant(high_F)),
+                BinaryTarget::<BITS>(self.constant(low_f)),
+                BinaryTarget::<BITS>(self.constant(high_f)),
             ));
         }
 
