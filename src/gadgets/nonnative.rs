@@ -180,15 +180,9 @@ impl<F: RichField + Extendable<D>, const D: usize> CircuitBuilder<F, D> {
 
     /// Returns `x % |FF|` as a `NonNativeTarget`.
     fn reduce<FF: Field>(&mut self, x: &BigUintTarget) -> NonNativeTarget<FF> {
-        println!("NUM LIMBS: {}", x.limbs.len());
-        let before = self.num_gates();
-
         let modulus = FF::order();
         let order_target = self.constant_biguint(&modulus);
         let value = self.rem_biguint(x, &order_target);
-
-        println!("NUMBER OF GATES: {}", self.num_gates() - before);
-        println!("OUTPUT LIMBS: {}", value.limbs.len());
 
         NonNativeTarget {
             value,
@@ -198,7 +192,6 @@ impl<F: RichField + Extendable<D>, const D: usize> CircuitBuilder<F, D> {
 
     /// Returns `x % |FF|` as a `NonNativeTarget`.
     /*fn reduce_by_bits<FF: Field>(&mut self, x: &BigUintTarget) -> NonNativeTarget<FF> {
-        println!("NUM LIMBS: {}", x.limbs.len());
         let before = self.num_gates();
 
         let mut powers_of_two = Vec::new();
@@ -425,7 +418,6 @@ mod tests {
         let x_ff = FF::rand();
         let y_ff = FF::rand();
         let product_ff = x_ff * y_ff;
-        println!("PRODUCT FF: {:?}", product_ff);
 
         type F = GoldilocksField;
         let config = CircuitConfig::standard_recursion_config();
@@ -452,8 +444,6 @@ mod tests {
         let mut unop_builder = CircuitBuilder::<F, 4>::new(config.clone());
         let mut op_builder = CircuitBuilder::<F, 4>::new(config);
 
-        println!("NUM: {}", num);
-
         let ffs: Vec<_> = (0..num).map(|_| FF::rand()).collect();
 
         let op_targets: Vec<_> = ffs
@@ -461,7 +451,6 @@ mod tests {
             .map(|&x| op_builder.constant_nonnative(x))
             .collect();
         op_builder.mul_many_nonnative(&op_targets);
-        println!("OPTIMIZED GATE COUNT: {}", op_builder.num_gates());
 
         let unop_targets: Vec<_> = ffs
             .iter()
@@ -471,8 +460,6 @@ mod tests {
         for i in 1..unop_targets.len() {
             result = unop_builder.mul_nonnative(&result, &unop_targets[i]);
         }
-
-        println!("UNOPTIMIZED GATE COUNT: {}", unop_builder.num_gates());
     }
 
     #[test]
@@ -520,8 +507,6 @@ mod tests {
 
         let inv_x_expected = builder.constant_nonnative(inv_x_ff);
         builder.connect_nonnative(&inv_x, &inv_x_expected);
-
-        println!("NUM GATES: {}", builder.num_gates());
 
         let data = builder.build();
         let proof = data.prove(pw).unwrap();
