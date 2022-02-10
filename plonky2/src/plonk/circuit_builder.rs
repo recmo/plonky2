@@ -619,6 +619,7 @@ impl<F: RichField + Extendable<D>, const D: usize> CircuitBuilder<F, D> {
 
         // Hash the public inputs, and route them to a `PublicInputGate` which will enforce that
         // those hash wires match the claimed public inputs.
+        self.push_context(Level::Info, "public_input_hash");
         let num_public_inputs = self.public_inputs.len();
         let public_inputs_hash =
             self.hash_n_to_hash_no_pad::<C::InnerHasher>(self.public_inputs.clone());
@@ -630,6 +631,10 @@ impl<F: RichField + Extendable<D>, const D: usize> CircuitBuilder<F, D> {
         {
             self.connect(hash_part, Target::wire(pi_gate, wire))
         }
+        self.pop_context();
+
+        // Print final gate counts
+        self.print_gate_counts(0);
 
         info!(
             "Degree before blinding & padding: {}",
