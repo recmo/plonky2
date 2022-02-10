@@ -105,12 +105,15 @@ impl<F: RichField + Extendable<D>, C: GenericConfig<D, F = F>, const D: usize>
     CircuitData<F, C, D>
 {
     pub fn prove(&self, inputs: PartialWitness<F>) -> Result<ProofWithPublicInputs<F, C, D>> {
-        prove(
+        let mut timing = TimingTree::default();
+        let proof = prove(
             &self.prover_only,
             &self.common,
             inputs,
-            &mut TimingTree::default(),
-        )
+            &mut timing,
+        );
+        timing.print();
+        proof
     }
 
     pub fn verify(&self, proof_with_pis: ProofWithPublicInputs<F, C, D>) -> Result<()> {
