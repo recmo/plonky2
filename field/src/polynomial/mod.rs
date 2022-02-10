@@ -26,6 +26,17 @@ impl<F: Field> PolynomialValues<F> {
         PolynomialValues { values }
     }
 
+    pub fn zero(len: usize) -> Self {
+        Self::new(vec![F::ZERO; len])
+    }
+
+    /// Returns the polynomial whole value is one at the given index, and zero elsewhere.
+    pub fn selector(len: usize, index: usize) -> Self {
+        let mut result = Self::zero(len);
+        result.values[index] = F::ONE;
+        result
+    }
+
     /// The number of values stored.
     pub fn len(&self) -> usize {
         self.values.len()
@@ -186,12 +197,21 @@ impl<F: Field> PolynomialCoeffs<F> {
         poly
     }
 
-    /// Removes leading zero coefficients.
+    /// Removes any leading zero coefficients.
     pub fn trim(&mut self) {
         self.coeffs.truncate(self.degree_plus_one());
     }
 
-    /// Removes leading zero coefficients.
+    /// Removes some leading zero coefficients, such that a desired length is reached. Fails if a
+    /// nonzero coefficient is encountered before then.
+    pub fn trim_to_len(&mut self, len: usize) -> Result<()> {
+        ensure!(self.len() >= len);
+        ensure!(self.coeffs[len..].iter().all(F::is_zero));
+        self.coeffs.truncate(len);
+        Ok(())
+    }
+
+    /// Removes any leading zero coefficients.
     pub fn trimmed(&self) -> Self {
         let coeffs = self.coeffs[..self.degree_plus_one()].to_vec();
         Self { coeffs }
