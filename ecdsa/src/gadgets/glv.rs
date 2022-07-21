@@ -118,7 +118,7 @@ impl<F: RichField + Extendable<D>, const D: usize> SimpleGenerator<F>
     fn run_once(&self, witness: &PartitionWitness<F>, out_buffer: &mut GeneratedValues<F>) {
         let k = Secp256K1Scalar::from_biguint(witness_get_biguint_target(
             witness,
-            self.k.value.clone(),
+            &self.k.value,
         ));
 
         let (k1, k2, k1_neg, k2_neg) = decompose_secp256k1_scalar(k);

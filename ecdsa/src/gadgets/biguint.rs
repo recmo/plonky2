@@ -272,12 +272,12 @@ impl<F: RichField + Extendable<D>, const D: usize> CircuitBuilderBiguint<F, D>
 
 pub fn witness_get_biguint_target<W: Witness<F>, F: PrimeField>(
     witness: &W,
-    bt: BigUintTarget,
+    bt: &BigUintTarget,
 ) -> BigUint {
     bt.limbs
-        .into_iter()
+        .iter()
         .rev()
-        .fold(BigUint::zero(), |acc, limb| {
+        .fold(BigUint::zero(), |acc, &limb| {
             (acc << 32) + witness.get_target(limb.0).to_canonical_biguint()
         })
 }
@@ -330,8 +330,8 @@ impl<F: RichField + Extendable<D>, const D: usize> SimpleGenerator<F>
     }
 
     fn run_once(&self, witness: &PartitionWitness<F>, out_buffer: &mut GeneratedValues<F>) {
-        let a = witness_get_biguint_target(witness, self.a.clone());
-        let b = witness_get_biguint_target(witness, self.b.clone());
+        let a = witness_get_biguint_target(witness, &self.a);
+        let b = witness_get_biguint_target(witness, &self.b);
         let (div, rem) = a.div_rem(&b);
 
         buffer_set_biguint_target(out_buffer, &self.div, &div);
